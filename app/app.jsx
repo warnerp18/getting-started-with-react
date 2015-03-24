@@ -63,8 +63,26 @@ class CommentBox extends React.Component {
   constructor(props) {
     super();
     this.state = {
-      comments: props.comments
+      comments: props.comments || []
     };
+  }
+
+  loadDataFromServer() {
+    $.ajax({
+      url: this.props.url,
+      dataType: 'json',
+      success: function(comments) {
+        this.setState({comments: comments});
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.log(err.toString());
+      }.bind(this)
+    });
+  }
+
+  componentDidMount() {
+    this.loadDataFromServer();
+    setInterval(this.loadDataFromServer.bind(this), 2000);
   }
 
   render() {
@@ -79,6 +97,6 @@ class CommentBox extends React.Component {
 }
 
 myComponent = React.render(
-  <CommentBox comments={comments}/>,
+  <CommentBox url="comments.json" />,
   document.getElementById('content')
 );
