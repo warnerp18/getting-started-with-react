@@ -15,15 +15,17 @@ class Comment extends React.Component {
 
 class CommentList extends React.Component {
   render() {
+    var commentNodes = this.props.comments.map(function(comment) {
+      return (
+        <Comment author={comment.author}>
+          {comment.text}
+        </Comment>
+      );
+    });
+
     return (
       <div className="comment-list">
-        <Comment author="Chris Mather">
-          This is the first comment
-        </Comment>
-
-        <Comment author="Another Guy">
-          Some other text
-        </Comment>
+        {commentNodes}
       </div>
     );
   }
@@ -39,12 +41,19 @@ class CommentForm extends React.Component {
   }
 }
 
+var comments = [
+  {
+    author: 'Chris Mather',
+    text: 'My very first comment!'
+  }
+];
+
 class CommentBox extends React.Component {
   render() {
     return (
       <div className="comment-box">
         <h1>Comments</h1>
-        <CommentList />
+        <CommentList comments={comments}/>
         <CommentForm />
       </div>
     );
