@@ -32,32 +32,25 @@ class CommentList extends React.Component {
 }
 
 class CommentForm extends React.Component {
+  handleSubmit(e) {
+    e.preventDefault();
+    var author = React.findDOMNode(this.refs.author).value.trim();
+    var text = React.findDOMNode(this.refs.text).value.trim();
+    var form = React.findDOMNode(this.refs.form);
+    this.props.onSubmit({author: author, text: text});
+    form.reset();
+  }
+
   render() {
     return (
-      <div className="comment-form">
-        CommentForm
-      </div>
+      <form className="comment-form" ref="form" onSubmit={e => this.handleSubmit(e) }>
+        <input type="text" placeholder="Your name" ref="author" />
+        <input type="text" placeholder="Say something useful..." ref="text" />
+        <input type="submit" value="Add Comment" />
+      </form>
     );
   }
 }
-
-comments = [
-  {
-    author: 'Chris Mather',
-    text: 'My very first comment!'
-  }
-];
-
-other = [
-  {
-    author: 'Chris Mather',
-    text: 'My very first comment!'
-  },
-  {
-    author: 'Another Person',
-    text: 'Another row!'
-  }
-];
 
 class CommentBox extends React.Component {
   constructor(props) {
@@ -80,6 +73,25 @@ class CommentBox extends React.Component {
     });
   }
 
+  handleNewComment(comment) {
+    var comments = this.state.comments;
+    var newComments = comments.concat([comment]);
+    this.setState({comments: newComments});
+
+    $.ajax({
+      url: this.props.url,
+      type: 'POST',
+      dataType: 'json',
+      data: comment,
+      success: function(comments) {
+        this.setState({comments: comments});
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.log(err.toString());
+      }.bind(this)
+    });
+  }
+
   componentDidMount() {
     this.loadDataFromServer();
     setInterval(this.loadDataFromServer.bind(this), 2000);
@@ -90,7 +102,7 @@ class CommentBox extends React.Component {
       <div className="comment-box">
         <h1>Comments</h1>
         <CommentList comments={this.state.comments}/>
-        <CommentForm />
+        <CommentForm onSubmit={comment => this.handleNewComment(comment)} />
       </div>
     );
   }
