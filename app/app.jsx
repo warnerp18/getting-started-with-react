@@ -41,26 +41,44 @@ class CommentForm extends React.Component {
   }
 }
 
-var comments = [
+comments = [
   {
     author: 'Chris Mather',
     text: 'My very first comment!'
   }
 ];
 
+other = [
+  {
+    author: 'Chris Mather',
+    text: 'My very first comment!'
+  },
+  {
+    author: 'Another Person',
+    text: 'Another row!'
+  }
+];
+
 class CommentBox extends React.Component {
+  constructor(props) {
+    super();
+    this.state = {
+      comments: props.comments
+    };
+  }
+
   render() {
     return (
       <div className="comment-box">
         <h1>Comments</h1>
-        <CommentList comments={comments}/>
+        <CommentList comments={this.state.comments}/>
         <CommentForm />
       </div>
     );
   }
 }
 
-React.render(
-  <CommentBox/>,
+myComponent = React.render(
+  <CommentBox comments={comments}/>,
   document.getElementById('content')
 );
