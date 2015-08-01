@@ -1,8 +1,28 @@
+class Comment extends React.Component{
+  render () {
+    return (
+      <div>
+        <div classnName='comment-body'>
+          {this.props.children}
+        </div>
+        <div className='comment-author'>
+          {this.props.author}
+        </div>
+      </div>
+    )
+  }
+}
+
 class CommentList extends React.Component{
   render() {
     return (
       <div className='comment-list'>
-        CommentList
+       <Comment author='Phil'>
+        This is the first comment.
+       </Comment>
+       <Comment author='Nicole'>
+        Test
+       </Comment>
       </div>
     );
   }
